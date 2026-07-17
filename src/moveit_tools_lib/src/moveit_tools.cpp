@@ -135,7 +135,11 @@ namespace moveit_tools{
         // 获取pre_grasp_pose
         auto pre_grasp_pose = this->computePreGrasp(grasp_pose, retreat_distance);
 
-        return this->cartesionApproachAndGrasp(this->arm_, pre_grasp_pose.pose, grasp_pose.pose, execute,  eef_step, min_fraction);
+        this->arm_->setPoseTarget(pre_grasp_pose);
+        auto ok_1 = this->PlanAndExecute(this->arm_, execute);
+        auto ok_2 = this->cartesionApproachAndGrasp(this->arm_, pre_grasp_pose.pose, grasp_pose.pose, execute,  eef_step, min_fraction);
+
+        return ok_1 && ok_2;
     }
 
 }

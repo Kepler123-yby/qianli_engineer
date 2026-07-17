@@ -62,7 +62,7 @@ public:
                   const bool& certesian_path = true,
                   const double& eef_step = 0.01,
                   const double& min_fraction = 0.95,
-                  const double& retreat_distance = 0.1);
+                  const double& retreat_distance = 0.15);
 
 private:
     // 私有工具函数
@@ -71,7 +71,7 @@ private:
     bool PlanAndExecute(const std::shared_ptr<MoveitGroupInterface>& interface, const bool execute = true);
 
     // pre_grasp计算
-    geometry_msgs::msg::PoseStamped computePreGrasp(const geometry_msgs::msg::PoseStamped& grasp, const double& retreat_distance = 0.1);
+    geometry_msgs::msg::PoseStamped computePreGrasp(const geometry_msgs::msg::PoseStamped& grasp, const double& retreat_distance = 0.15);
 
     // 笛卡尔规划，避免抓取过程中不必要的碰撞
     bool cartesionApproachAndGrasp(const std::shared_ptr<MoveitGroupInterface>& interface,
