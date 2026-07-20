@@ -2,11 +2,11 @@
 
 namespace moveit_tools{
     
-    Moveit::Moveit(std::shared_ptr<rclcpp::Node>& node, 
-                                        const float& vec_scale, 
-                                        const float& acc_scale)
+    Moveit::Moveit(const std::shared_ptr<rclcpp::Node>& node, 
+                                    float vec_scale, 
+                                    float acc_scale)
     {
-        this->node_ = std::shared_ptr<rclcpp::Node>(node);                                 // 初始化node
+        this->node_ = node;                                 // 初始化node
         this->arm_ = std::make_shared<MoveitGroupInterface>(this->node_, "arm");            // 创建arm规划组
         this->gripper_ = std::make_shared<MoveitGroupInterface>(this->node_, "gripper");    // 创建gripper规划组
 
@@ -30,7 +30,7 @@ namespace moveit_tools{
         }
     }
 
-    bool Moveit::PlanAndExecute(const std::shared_ptr<MoveitGroupInterface>& interface, const bool execute)
+    bool Moveit::PlanAndExecute(const std::shared_ptr<MoveitGroupInterface>& interface, bool execute)
     {
         // 创建规划
         MoveitGroupInterface::Plan plan;
@@ -44,7 +44,7 @@ namespace moveit_tools{
         return ok;
     }
 
-    geometry_msgs::msg::PoseStamped Moveit::computePreGrasp(const geometry_msgs::msg::PoseStamped& grasp, const double& retreat_distance)
+    geometry_msgs::msg::PoseStamped Moveit::computePreGrasp(const geometry_msgs::msg::PoseStamped& grasp, double retreat_distance)
     {
         // 把grasp的旋转坐标的四元数转换为可供tf2计算的q
         tf2::Quaternion q;
@@ -69,9 +69,9 @@ namespace moveit_tools{
     bool Moveit::cartesionApproachAndGrasp(const std::shared_ptr<MoveitGroupInterface>& interface,
                                            const geometry_msgs::msg::Pose& pre_grasp_pose,
                                            const geometry_msgs::msg::Pose& grasp_pose,
-                                           const bool& execute,
-                                           const double& eef_step,
-                                           const double& min_fraction)
+                                           bool execute,
+                                           double eef_step,
+                                           double min_fraction)
     {
         std::vector<geometry_msgs::msg::Pose> waypoints{pre_grasp_pose, grasp_pose};
 
@@ -93,38 +93,38 @@ namespace moveit_tools{
         }
     }
     
-    bool Moveit::namedGoal(const std::string& name, const bool& execute)
+    bool Moveit::namedGoal(const std::string& name, bool execute)
     {
         this->arm_->setStartStateToCurrentState();
         this->arm_->setNamedTarget(name);
         return this->PlanAndExecute(this->arm_, execute);
     }
 
-    bool Moveit::jointGoal(const std::vector<double>& joint, const bool& execute)
+    bool Moveit::jointGoal(const std::vector<double>& joint, bool execute)
     {
         this->arm_->setStartStateToCurrentState();
         this->arm_->setJointValueTarget(joint);
         return this->PlanAndExecute(this->arm_, execute);
     }
 
-    bool Moveit::poseGoal(const std::shared_ptr<pose>& pose,
-                          const bool& execute, 
-                          const bool& certesian_path,
-                          const double& eef_step,
-                          const double& min_fraction,
-                          const double& retreat_distance)
+    bool Moveit::poseGoal(const pose& pose,
+                          bool execute, 
+                          bool certesian_path,
+                          double eef_step,
+                          double min_fraction,
+                          double retreat_distance)
     {
         this->arm_->setStartStateToCurrentState();
 
         geometry_msgs::msg::PoseStamped grasp_pose;
         grasp_pose.header.frame_id = "base_link";
-        grasp_pose.pose.position.x = pose->x_;
-        grasp_pose.pose.position.y = pose->y_;
-        grasp_pose.pose.position.z = pose->z_;
-        grasp_pose.pose.orientation.w = pose->q_.getW();
-        grasp_pose.pose.orientation.x = pose->q_.getX();
-        grasp_pose.pose.orientation.y = pose->q_.getY();
-        grasp_pose.pose.orientation.z = pose->q_.getZ();
+        grasp_pose.pose.position.x = pose.x_;
+        grasp_pose.pose.position.y = pose.y_;
+        grasp_pose.pose.position.z = pose.z_;
+        grasp_pose.pose.orientation.w = pose.q_.getW();
+        grasp_pose.pose.orientation.x = pose.q_.getX();
+        grasp_pose.pose.orientation.y = pose.q_.getY();
+        grasp_pose.pose.orientation.z = pose.q_.getZ();
 
         if (!certesian_path)
         {

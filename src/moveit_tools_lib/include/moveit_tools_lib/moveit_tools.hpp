@@ -20,12 +20,12 @@ struct pose
     double x_, y_, z_;
     tf2::Quaternion q_;
   
-    void init(const double& x, 
-            const double& y,
-            const double& z,
-            const double& roll,
-            const double& pitch,
-            const double& yaw)
+    void init(double x, 
+            double y,
+            double z,
+            double roll,
+            double pitch,
+            double yaw)
     {
         x_ = x;
         y_ = y;
@@ -39,9 +39,9 @@ class Moveit
 {
 public:
     // 构造函数
-    Moveit(std::shared_ptr<rclcpp::Node>& node, 
-                const float& vec_scale = 1.0f, 
-                const float& acc_scale = 1.0f);
+    explicit Moveit(const std::shared_ptr<rclcpp::Node>& node, 
+                    float vec_scale = 1.0f, 
+                    float acc_scale = 1.0f);
     // 析构函数
     ~Moveit();
     
@@ -51,35 +51,35 @@ public:
     
     // 外部接口函数
     // nameGoal
-    bool namedGoal(const std::string& name, const bool& execute = true);
+    bool namedGoal(const std::string& name, bool execute = true);
 
     // jointGoal
-    bool jointGoal(const std::vector<double>& joint, const bool& execute = true);
+    bool jointGoal(const std::vector<double>& joint, bool execute = true);
 
     // poseGoal
-    bool poseGoal(const std::shared_ptr<pose>& pose,
-                  const bool& execute = true, 
-                  const bool& certesian_path = true,
-                  const double& eef_step = 0.01,
-                  const double& min_fraction = 0.95,
-                  const double& retreat_distance = 0.15);
+    bool poseGoal(const pose& pose,
+                  bool execute = true, 
+                  bool certesian_path = true,
+                  double eef_step = 0.01,
+                  double min_fraction = 0.95,
+                  double retreat_distance = 0.15);
 
 private:
     // 私有工具函数
     
     // 规划执行工具函数
-    bool PlanAndExecute(const std::shared_ptr<MoveitGroupInterface>& interface, const bool execute = true);
+    bool PlanAndExecute(const std::shared_ptr<MoveitGroupInterface>& interface, bool execute = true);
 
     // pre_grasp计算
-    geometry_msgs::msg::PoseStamped computePreGrasp(const geometry_msgs::msg::PoseStamped& grasp, const double& retreat_distance = 0.15);
+    geometry_msgs::msg::PoseStamped computePreGrasp(const geometry_msgs::msg::PoseStamped& grasp, double retreat_distance = 0.15);
 
     // 笛卡尔规划，避免抓取过程中不必要的碰撞
     bool cartesionApproachAndGrasp(const std::shared_ptr<MoveitGroupInterface>& interface,
                                    const geometry_msgs::msg::Pose& pre_grasp_pose,
                                    const geometry_msgs::msg::Pose& grasp_pose,
-                                   const bool& execute = true,
-                                   const double& eef_step = 0.01,
-                                   const double& min_fraction = 0.95);
+                                   bool execute = true,
+                                   double eef_step = 0.01,
+                                   double min_fraction = 0.95);
 
 
     // 私有属性
