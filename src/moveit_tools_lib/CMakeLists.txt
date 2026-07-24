@@ -16,6 +16,8 @@ find_package(moveit_ros_planning_interface REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
+find_package(safe_thread_queue REQUIRED)
+find_package(yaml-cpp REQUIRED)
 
 # 1. 正确：填入src下的cpp实现文件，不要写hpp
 add_library(${PROJECT_NAME}
@@ -35,6 +37,8 @@ ament_target_dependencies(${PROJECT_NAME} PUBLIC
   geometry_msgs
   tf2
   tf2_geometry_msgs
+  safe_thread_queue
+  yaml-cpp
 )
 
 # 2. 关键：安装头文件目录，否则外部包找不到hpp
@@ -62,6 +66,8 @@ ament_export_dependencies(
   geometry_msgs
   tf2
   tf2_geometry_msgs
+  safe_thread_queue
+  yaml-cpp
 )
 
 # 测试部分
